@@ -1,0 +1,50 @@
+﻿@model WebOlx2.Models.MainPageModel
+
+@{
+    ViewBag.Title = "Доска объявлений";
+
+}
+<div class="clearfix"></div>
+<div class="">
+    <div class="row">
+        <div id="search" class="col-xs-12">
+
+            <form method="POST" action=@Url.Action("Index", "Find")>
+                <input type="text" name="find"/>
+                <input type="submit" value="Найти"/>
+            </form>
+
+        </div>
+    </div>
+
+    <div class="row">
+        <ul>
+            @foreach (Catalog catalog in Model.RootCatalog)
+            {
+                <li>
+                    <a href="@Url.Action("Index","Catalog",new {id=catalog.CatalogID})">@catalog.Name</a>
+                </li>
+            }
+        </ul>
+    </div>
+
+    <div class="clearfix">
+        <div class="thumb_lot">
+            <ul>
+                @foreach (Lot lot in Model.Lots)
+                {
+                    <li>
+                        <div class="">
+                            @{string img = "/Content/UploadImg/Lot_" + @lot.LotID + ".jpg";}
+                            <img src=@img alt="@lot.Title" />
+                            <a href=@Url.Action("Index", "Lot", new {id = @lot.LotID}, null)><strong>@lot.Title</strong></a>
+                            <p>Цена: @lot.Price</p>
+                        </div>
+                        
+                    </li>
+                }
+            </ul>
+           
+        </div>
+    </div>
+</div>

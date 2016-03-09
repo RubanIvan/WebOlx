@@ -1,0 +1,49 @@
+﻿@model dynamic
+
+@{
+    ViewBag.Title = "title";
+   
+}
+
+<h2>Удаление лотов</h2>
+
+<div  class="Delete">
+
+    <ul id="LotList">
+        <li>erreere</li>
+    </ul>
+
+    <div id="AjaxLoad">
+        <img src="/Content/gif-load.gif" />
+    </div>
+
+</div>
+
+
+
+@section scripts
+{
+    <script>
+
+
+        ListUpdate();
+
+        function ListUpdate() {
+            $("#AjaxLoad").show();
+            $.post('/Lot/GetAllLot', {}, function (userLot) {
+
+                $("#LotList").empty();
+                for (var i in userLot) {
+                    var li = $("<li/>");
+                    li.html("<strong>" + userLot[i].Title + "</strong>" +
+                        "");
+                    $("#LotList").append(li);
+                }
+            });
+            $("#AjaxLoad").hide();
+        }
+
+    </script>
+
+
+}
