@@ -63,3 +63,23 @@
   margin-left: 50%;
   margin-top: 20%;
 }
+.pang {
+  text-align: center;
+  margin-bottom: 20px;
+}
+.pagination a {
+  color: #428bca;
+}
+.pagination li > span {
+  color: #99d4ff;
+}
+.pagination li > span :hover {
+  background-color: #fff;
+}
+.lotList img {
+  height: 100px;
+  float: left;
+}
+.lotList li {
+  margin-bottom: 10px;
+}

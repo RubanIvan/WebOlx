@@ -1,0 +1,33 @@
+﻿@model System.Collections.Generic.List<WebOlx2.Lot>
+
+@{
+    ViewBag.Title = "title";
+    //Layout = "_Layout";
+}
+
+<h2>@ViewBag.CatName</h2>
+
+<div class="lotList">
+
+    <ul>
+        @{
+            foreach (Lot lot in Model)
+            {
+                <li class="clearfix">
+                    @{string img = "/Content/UploadImg/Lot_" + @lot.LotID + ".jpg";}
+                    <img src=@img alt="@lot.Title"/>
+                    <a href=@Url.Action("Index", "Lot", new {id = lot.LotID}, null)>@lot.Title</a>
+                    <p>Цена: @lot.Price</p>
+                </li>
+            }
+        }
+
+    </ul>
+
+    <div class="pang">
+        <ul class="pagination">
+            @Html.Raw(ViewBag.Pangination)
+        </ul>
+    </div>
+
+</div>

@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using WebOlx2.Proc;
 
 namespace WebOlx2.Controllers
 {
@@ -20,7 +21,7 @@ namespace WebOlx2.Controllers
             if (!lot.Any()){ return RedirectToAction("Index", "Home"); }
             Lot model = lot.First();
 
-            ViewBag.LotPath = GetCatPath(model.CatId);
+            ViewBag.LotPath = LotManage.GetCatPath(model.CatId);
 
             return View(model);
         }
@@ -101,28 +102,29 @@ namespace WebOlx2.Controllers
 
         }
 
-        //получить путь до данного каталога
-        private List<Catalog> GetCatPath(int CatId)
+        [HttpPost]
+        [Authorize]
+        public void DelLot(int lotId)
         {
-            List<Catalog> Lots = new List<Catalog>();
-
             OlxEntities entities = new OlxEntities();
-            Catalog c = (from x in entities.Catalog
-                         where x.CatalogID == CatId
-                         select x).First();
-            Lots.Add(c);
-            //если это каталог верхнего уровня то выходим
-            //if (c.ParentID == 0) return Lots;
-            while (c.ParentID != 0)
+            var lot = (from x in entities.Lot
+                       where x.UserName == User.Identity.Name && x.LotID==lotId
+                       select x);
+            if (lot.Any())
             {
-                int l = c.ParentID;
+                entities.Lot.Remove(lot.First());
+                entities.SaveChanges();
 
-                c = (from x in entities.Catalog
-                     where x.CatalogID == l
-                     select x).First();
-                Lots.Insert(0, c);
+                string path = AppDomain.CurrentDomain.BaseDirectory + "Content/UploadImg/";
+                System.IO.File.Delete(Path.Combine(path, "Lot_" + lotId + ".jpg"));
+
+                
             }
-            return Lots;
+            return;
+
         }
+
+
+       
     }
 }

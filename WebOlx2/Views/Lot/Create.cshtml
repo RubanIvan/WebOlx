@@ -5,7 +5,7 @@
 
 }
 
-<h2>title</h2>
+<h2>Создание нового лота</h2>
 
 <div class="category">
     <select size="10" class="form" name="selectFirst" id="Cat0">
@@ -26,7 +26,7 @@
     <br>
     <h4 style="display: none">Категория :<label id="CatLabel"></label> </h4>
 
-    <div id="lot" style="display: block">
+    <div id="lot" style="display: none">
         <form method="POST" enctype="multipart/form-data" action="@Url.Action("CreateLot","Lot")">
 
             <div class="Image">
@@ -155,7 +155,7 @@
             $("#CatButton").hide();
             $(".category h4").show();
 
-            $(".lot").show();
+            $("#lot").show();
 
             $("#lot > form > input[type='hidden']").val(ProdCatId);
 

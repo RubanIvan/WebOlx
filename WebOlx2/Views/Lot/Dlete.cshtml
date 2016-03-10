@@ -30,18 +30,28 @@
 
         function ListUpdate() {
             $("#AjaxLoad").show();
-            $.post('/Lot/GetAllLot', {}, function (userLot) {
+            $.post('/Lot/GetAllLot', {}, function(userLot) {
 
                 $("#LotList").empty();
                 for (var i in userLot) {
                     var li = $("<li/>");
                     li.html("<strong>" + userLot[i].Title + "</strong>" +
-                        "");
+                        "<button  onClick=DelBtn(" + userLot[i].LotID + ") >Удалить</button>");
                     $("#LotList").append(li);
                 }
             });
             $("#AjaxLoad").hide();
         }
+
+        function DelBtn(i) {
+            if (confirm("Вы действительно хотите удалить лот " + i)) {
+                $.post('/Lot/DelLot', { lotId: i }, function() {
+                    ListUpdate();
+                });
+
+            }
+        }
+    
 
     </script>
 
