@@ -1,0 +1,168 @@
+﻿@model System.Collections.Generic.List<WebOlx2.Catalog>
+
+@{
+    ViewBag.Title = "Добавить объявление";
+
+}
+
+<h2>Создание нового лота</h2>
+
+<div class="category">
+    <select size="10" class="form" name="selectFirst" id="Cat0">
+        @foreach (Catalog catalog in Model.FindAll(x => (x.ParentID == 0)))
+        {
+            <option catId="@catalog.CatalogID">@catalog.Name</option>
+        }
+    </select>
+
+    <select size="10" class="form" name="selectFirst" id="Cat1" style="display: none"></select>
+
+    <select size="10" class="form" name="selectFirst" id="Cat2" style="display: none"></select>
+
+    <br />
+
+    <button id="CatButton" style="display: none">Выбрать</button>
+
+    <br>
+    <h4 style="display: none">Категория :<label id="CatLabel"></label> </h4>
+
+    <div id="lot" style="display: none">
+        <form method="POST" enctype="multipart/form-data" action="@Url.Action("CreateLot","Lot")">
+
+            <div class="Image">
+                <input type="file" name="Image" />
+            </div>
+
+            <div class="Title">
+                <h4>Название</h4>
+                <input type="text" name="Title" maxlength="80" />
+            </div>
+
+            <div class="Price">
+                <h4>Цена</h4>
+                <input type="text" name="Price" maxlength="10" />
+            </div>
+
+            <div class="Desc">
+                <h4>Описание</h4>
+                <textarea name="Desc" rows="10" cols="80" maxlength="2040"></textarea>
+            </div>
+
+            <input type="hidden" name="CatId" />
+
+            <input type="submit" />
+        </form>
+    </div>
+
+
+
+</div>
+
+
+@section scripts
+{
+    <script type="text/javascript">
+
+        var ProdCatId = null;
+
+        var catalog = new Array();
+
+        @foreach (Catalog catalog in Model)
+        {
+        <text>
+        catalog[@catalog.CatalogID]={Name:"@catalog.Name", ParentId:@catalog.ParentID, CatalogID:@catalog.CatalogID};
+        </text>
+        }
+
+        // выбор каталога
+
+        $("#Cat0").change(function() {
+            var catid = $("#Cat0 option:selected").attr("catId");
+
+            var cat1num = 0;
+
+            $("#Cat1").empty();
+
+            for (var i in catalog) {
+                if (catalog[i].ParentId == catid) {
+                    cat1num++;
+                    $("#Cat1").append('<option catId="' + catalog[i].CatalogID + ' ">' + catalog[i].Name + "</option>");
+                }
+            }
+            if (cat1num > 0) {
+                $("#Cat1").show();
+                $("#CatButton").hide();
+            } else {
+                $("#Cat1").hide();
+                $("#Cat2").hide();
+                $("#CatButton").show();
+            }
+
+
+        });
+
+        $("#Cat1").change(function() {
+            var catid = $("#Cat1 option:selected").attr("catId");
+
+            var catnum = 0;
+
+            $("#Cat2").empty();
+
+            for (var i in catalog) {
+                if (catalog[i].ParentId == catid) {
+                    catnum++;
+                    $("#Cat2").append('<option catId="' + catalog[i].CatalogID + ' ">' + catalog[i].Name + "</option>");
+                }
+            }
+            if (catnum > 0) {
+                $("#Cat2").show();
+                $("#CatButton").hide();
+            } else {
+                $("#Cat2").hide();
+                $("#CatButton").show();
+            }
+
+
+        });
+
+        $("#Cat2").change(function() {
+            $("#CatButton").show();
+        });
+
+        $("#CatButton").click(function() {
+            //alert("sddsd");
+            var cat0 = $("#Cat0 option:selected");
+            var cat1 = $("#Cat1 option:selected");
+            var cat2 = $("#Cat2 option:selected");
+
+            var path = cat0.val();
+            ProdCatId = cat0.attr("catId");
+
+            if (cat1.length > 0) {
+                path += " > " + cat1.val();
+                ProdCatId = cat1.attr("catId");
+            }
+            if (cat2.length > 0) {
+                path += " > " + cat2.val();
+                ProdCatId = cat2.attr("catId");
+            }
+
+            $("#CatLabel").text(path);
+
+            $("#Cat0").hide();
+            $("#Cat1").hide();
+            $("#Cat2").hide();
+            $("#CatButton").hide();
+            $(".category h4").show();
+
+            $("#lot").show();
+
+            $("#lot > form > input[type='hidden']").val(ProdCatId);
+
+        });
+
+        // заполнение карточки лота
+
+
+    </script>
+}

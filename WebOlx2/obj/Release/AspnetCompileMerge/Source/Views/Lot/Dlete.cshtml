@@ -1,0 +1,59 @@
+﻿@model dynamic
+
+@{
+    ViewBag.Title = "title";
+   
+}
+
+<h2>Удаление лотов</h2>
+
+<div  class="Delete">
+
+    <ul id="LotList">
+        <li>erreere</li>
+    </ul>
+
+    <div id="AjaxLoad">
+        <img src="/Content/gif-load.gif" />
+    </div>
+
+</div>
+
+
+
+@section scripts
+{
+    <script>
+
+
+        ListUpdate();
+
+        function ListUpdate() {
+            $("#AjaxLoad").show();
+            $.post('/Lot/GetAllLot', {}, function(userLot) {
+
+                $("#LotList").empty();
+                for (var i in userLot) {
+                    var li = $("<li/>");
+                    li.html("<strong>" + userLot[i].Title + "</strong>" +
+                        "<button  onClick=DelBtn(" + userLot[i].LotID + ") >Удалить</button>");
+                    $("#LotList").append(li);
+                }
+            });
+            $("#AjaxLoad").hide();
+        }
+
+        function DelBtn(i) {
+            if (confirm("Вы действительно хотите удалить лот " + i)) {
+                $.post('/Lot/DelLot', { lotId: i }, function() {
+                    ListUpdate();
+                });
+
+            }
+        }
+    
+
+    </script>
+
+
+}
